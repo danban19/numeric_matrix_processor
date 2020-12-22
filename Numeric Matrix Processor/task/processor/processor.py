@@ -1,6 +1,7 @@
 from copy import deepcopy
 
-def greetings():
+
+def greetings():  # prints greetings and actions to choose from
     print('''1. Add matrices
 2. Multiply matrix by a constant
 3. Multiply matrices
@@ -27,7 +28,7 @@ def greetings():
         greetings()
 
 
-def add_matrices():
+def add_matrices():  # adds 2 matrices
     matrix1 = []
     matrix2 = []
     output_matrix = []
@@ -40,18 +41,18 @@ def add_matrices():
     for i in range(matrix2_dimensions[0]):
         matrix2.append([float(element) for element in input().split(' ')])
 
-    if matrix1_dimensions == matrix2_dimensions:
+    if matrix1_dimensions == matrix2_dimensions:  # checks if dimensions of matrices are the same
         for i in range(matrix1_dimensions[0]):
             output_matrix.append([str(matrix1[i][j] + matrix2[i][j]) for j in range(matrix1_dimensions[1])])
         print('The result is:')
         for row in output_matrix:
             print(' '.join(row))
-    else:
+    else:  # if dimensions aren't the same, the operation cannot be performed
         print('The operation cannot be performed.')
-
     greetings()
 
-def multiply_by_constant():
+
+def multiply_by_constant():  # multiplies an array by a constant
     matrix1 = []
     output_matrix = []
     matrix1_dimensions = [int(element) for element in input('Enter size of matrix:').split(' ')]
@@ -66,7 +67,8 @@ def multiply_by_constant():
         print(' '.join(row))
     greetings()
 
-def multiply_matrices():
+
+def multiply_matrices():  # multiplies 2 matrices
     matrix1 = []
     matrix2 = []
     matrix1_dimensions = [int(element) for element in input('Enter size of first matrix:').split(' ')]
@@ -91,7 +93,8 @@ def multiply_matrices():
         print('The operation cannot be performed.')
     greetings()
 
-def transposition():
+
+def transposition():  # transposition of an array
     print('''1. Main diagonal
 2. Side diagonal
 3. Vertical line
@@ -103,45 +106,48 @@ def transposition():
     print('Enter matrix:')
     for i in range(matrix1_dimensions[0]):
         matrix1.append([float(element) for element in input().split(' ')])
-    if transposition_action == '1': # main diagonal
+    if transposition_action == '1':  # transposition by main diagonal
         for i in range(matrix1_dimensions[0]):
             output_matrix.append([str(matrix1[j][i]) for j in range(matrix1_dimensions[1])])
         print('The result is:')
         for row in output_matrix:
             print(' '.join(row))
 
-    elif transposition_action == '2': # side diagonal
+    elif transposition_action == '2':  # transposition side diagonal
         for i in range(matrix1_dimensions[0]):
-            output_matrix.append([str(matrix1[matrix1_dimensions[0] - j - 1][matrix1_dimensions[0] - i - 1]) for j in range(matrix1_dimensions[1])])
+            output_matrix.append([str(matrix1[matrix1_dimensions[0] - j - 1][matrix1_dimensions[0] - i - 1])
+                                  for j in range(matrix1_dimensions[1])])
         print('The result is:')
         for row in output_matrix:
             print(' '.join(row))
 
-    elif transposition_action == '3': # vertical diagonal
+    elif transposition_action == '3':  # transposition vertical diagonal
         for i in range(matrix1_dimensions[0]):
             output_matrix.append([str(matrix1[i][matrix1_dimensions[0] - j - 1]) for j in range(matrix1_dimensions[1])])
         print('The result is:')
         for row in output_matrix:
             print(' '.join(row))
 
-    elif transposition_action == '4': # horizontal diagonal
+    elif transposition_action == '4':  # transposition horizontal diagonal
         for i in range(matrix1_dimensions[0]):
             output_matrix.append([str(matrix1[matrix1_dimensions[0] - i - 1][j]) for j in range(matrix1_dimensions[1])])
         print('The result is:')
         for row in output_matrix:
             print(' '.join(row))
 
-def determinant_calculation():
+
+def determinant_calculation():  # calculates matrix determinant
     matrix = []
     matrix_dimensions = [int(element) for element in input('Enter matrix size:').split(' ')]
     print('Enter matrix:')
     for i in range(matrix_dimensions[0]):
         matrix.append([float(element) for element in input().split(' ')])
-    determinant = laplace_expansion(matrix)
+    determinant = laplace_expansion(matrix)  # goes to determinant calculation using laplace expansion
     print('The result is:')
     print(determinant)
 
-def laplace_expansion(matrix):
+
+def laplace_expansion(matrix):  # determinant calculation using laplace expansion
     determinant = 0
     if len(matrix) == 1:
         determinant += matrix[0][0]
@@ -151,16 +157,18 @@ def laplace_expansion(matrix):
         for i in range(len(matrix)):
             cofactor = (-1) ** i * matrix[0][i] * laplace_expansion(matrix_reduction(matrix, 0, i))
             determinant += cofactor
-    return (determinant)
+    return determinant
 
-def matrix_reduction(original_matrix, row, column):
+
+def matrix_reduction(original_matrix, row, column):  # reduces the matrix
     new_matrix = deepcopy(original_matrix)
     new_matrix.remove(original_matrix[row])
     for i in range(len(new_matrix)):
         new_matrix[i].pop(column)
     return new_matrix
 
-def matrix_inversion():
+
+def matrix_inversion():  # inverses a matrix
     matrix = []
     matrix_dimensions = [int(element) for element in input('Enter matrix size:').split(' ')]
     print('Enter matrix:')
@@ -178,7 +186,7 @@ def matrix_inversion():
     ct = []
     for i in range(len(matrix)):
         ct.append([cof_array[j][i] for j in range(len(matrix))])
-    inversed_matrix = []
+    inverse_matrix = []
     for i in range(len(matrix)):
         row = []
         for j in range(len(matrix)):
@@ -186,17 +194,19 @@ def matrix_inversion():
                 row.append('0')
             else:
                 row.append(str(int(ct[i][j] / determinant * 100) / 100))
-        inversed_matrix.append(row)
+        inverse_matrix.append(row)
     print('The result is:')
-    for row in inversed_matrix:
+    for row in inverse_matrix:
         print('  '.join(row))
 
-def cofactor_array(matrix, i, j):
+
+def cofactor_array(matrix, i, j):  # returns a cofactor array using matrix, i-row and j-column
     cofactor1 = 1
     if len(matrix) == 2:
         cofactor1 *= (matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0])
     else:
-        cofactor1 *= (-1) ** (i + j) * laplace_expansion(matrix_reduction(matrix, i , j))
-    return(cofactor1)
+        cofactor1 *= (-1) ** (i + j) * laplace_expansion(matrix_reduction(matrix, i, j))
+    return cofactor1
+
 
 greetings()
